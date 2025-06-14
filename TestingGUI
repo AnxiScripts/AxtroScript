@@ -1,133 +1,146 @@
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
+local Lighting = game:GetService("Lighting")
 
-local toggleKey = Enum.KeyCode.RightShift
+-- GLOBAL SETTINGS
 local savedSettings = getgenv().GUI_Settings or {}
 
--- Main GUI setup
+-- Blur effect for background
+local blur = Instance.new("BlurEffect", Lighting)
+blur.Size = 12
+
+-- GUI ROOT
 local gui = Instance.new("ScreenGui", game.CoreGui)
-gui.Name = "AdvancedExploitGUI"
+gui.Name = "NativeFishingGUI"
 gui.ResetOnSpawn = false
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Main Frame
+-- MAIN FRAME
 local main = Instance.new("Frame", gui)
-main.Position = UDim2.new(0.3, 0, 0.2, 0)
 main.Size = UDim2.new(0, 620, 0, 360)
-main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+main.Position = UDim2.new(0.3, 0, 0.2, 0)
+main.BackgroundColor3 = Color3.fromRGB(70, 0, 0)
+main.BackgroundTransparency = 0.3
 main.BorderSizePixel = 0
 main.Active = true
 main.Draggable = true
-Instance.new("UICorner", main).CornerRadius = UDim.new(0, 12)
+Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
 
--- Sidebar
+-- SIDEBAR
 local sidebar = Instance.new("Frame", main)
 sidebar.Size = UDim2.new(0, 150, 1, 0)
-sidebar.BackgroundColor3 = Color3.fromRGB(35, 0, 0)
+sidebar.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
+sidebar.BackgroundTransparency = 0.4
 sidebar.BorderSizePixel = 0
-Instance.new("UICorner", sidebar).CornerRadius = UDim.new(0, 12)
+Instance.new("UICorner", sidebar).CornerRadius = UDim.new(0, 10)
 
 local sideLayout = Instance.new("UIListLayout", sidebar)
 sideLayout.Padding = UDim.new(0, 8)
 sideLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 sideLayout.VerticalAlignment = Enum.VerticalAlignment.Top
 
--- Tab button helper
+-- TABS
 local function createTabBtn(name, icon)
 	local btn = Instance.new("TextButton", sidebar)
 	btn.Size = UDim2.new(1, -20, 0, 32)
-	btn.BackgroundColor3 = Color3.fromRGB(60, 10, 10)
+	btn.BackgroundColor3 = Color3.fromRGB(100, 20, 20)
+	btn.BackgroundTransparency = 0.3
 	btn.Text = icon .. "  " .. name
 	btn.Font = Enum.Font.GothamBold
-	btn.TextSize = 15
+	btn.TextSize = 14
 	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
 	btn.AutoButtonColor = false
 	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
 	return btn
 end
 
--- Add all sidebar tabs
-local tabNames = {
-	{ "Configuration", "🛠️" },
-	{ "Fishing", "🎣" },
-	{ "Autos", "🤖" },
-	{ "Areas", "🗺️" },
-	{ "Market", "💰" },
-	{ "Miscellaneous", "📦" },
-	{ "Settings", "⚙️" },
-	{ "Debug", "🐞" }
-}
-
-local pages = {}
-local tabButtons = {}
-
--- Content Frame
+-- CONTENT FRAME
 local contentFrame = Instance.new("Frame", main)
 contentFrame.Position = UDim2.new(0, 155, 0, 0)
 contentFrame.Size = UDim2.new(1, -155, 1, 0)
-contentFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-Instance.new("UICorner", contentFrame).CornerRadius = UDim.new(0, 12)
+contentFrame.BackgroundTransparency = 1
 
--- Page creation helper
+local pages = {}
+
 local function createPage(name)
 	local page = Instance.new("Frame", contentFrame)
 	page.Size = UDim2.new(1, 0, 1, 0)
-	page.Visible = false
 	page.BackgroundTransparency = 1
+	page.Visible = false
 
 	local layout = Instance.new("UIListLayout", page)
 	layout.Padding = UDim.new(0, 10)
 	layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 	layout.VerticalAlignment = Enum.VerticalAlignment.Top
+
 	pages[name] = page
 	return page
 end
 
--- Toggle helper
-local function createToggle(parent, text, key)
-	local toggle = Instance.new("TextButton", parent)
-	toggle.Size = UDim2.new(0.9, 0, 0, 34)
-	toggle.BackgroundColor3 = Color3.fromRGB(45, 0, 0)
-	toggle.Font = Enum.Font.Gotham
-	toggle.TextSize = 14
-	toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
-	toggle.AutoButtonColor = false
-	Instance.new("UICorner", toggle).CornerRadius = UDim.new(0, 6)
+-- HEADER TITLE
+local function createTitle(parent, text)
+	local title = Instance.new("TextLabel", parent)
+	title.Size = UDim2.new(1, -20, 0, 30)
+	title.Text = text
+	title.Font = Enum.Font.GothamBold
+	title.TextSize = 20
+	title.TextColor3 = Color3.fromRGB(255, 255, 255)
+	title.BackgroundTransparency = 1
+	title.TextXAlignment = Enum.TextXAlignment.Left
+end
 
-	local state = savedSettings[key] or false
-	local function updateVisual()
-		toggle.Text = text .. (state and " [ON]" or " [OFF]")
-		toggle.BackgroundColor3 = state and Color3.fromRGB(120, 20, 20) or Color3.fromRGB(45, 0, 0)
-	end
-	updateVisual()
+-- TOGGLE
+local function createToggle(parent, label, key)
+	local frame = Instance.new("Frame", parent)
+	frame.Size = UDim2.new(0.9, 0, 0, 30)
+	frame.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
+	frame.BackgroundTransparency = 0.3
+	Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 6)
+
+	local text = Instance.new("TextLabel", frame)
+	text.Size = UDim2.new(0.8, 0, 1, 0)
+	text.BackgroundTransparency = 1
+	text.Font = Enum.Font.Gotham
+	text.TextSize = 14
+	text.TextColor3 = Color3.fromRGB(255, 255, 255)
+	text.TextXAlignment = Enum.TextXAlignment.Left
+	text.Text = "   " .. label
+
+	local toggle = Instance.new("TextButton", frame)
+	toggle.Size = UDim2.new(0.2, -4, 0.8, 0)
+	toggle.Position = UDim2.new(0.8, 2, 0.1, 0)
+	toggle.BackgroundColor3 = savedSettings[key] and Color3.fromRGB(200, 20, 20) or Color3.fromRGB(80, 0, 0)
+	toggle.BackgroundTransparency = 0.2
+	toggle.Text = ""
+	Instance.new("UICorner", toggle).CornerRadius = UDim.new(1, 0)
 
 	toggle.MouseButton1Click:Connect(function()
-		state = not state
-		savedSettings[key] = state
-		updateVisual()
+		savedSettings[key] = not savedSettings[key]
+		toggle.BackgroundColor3 = savedSettings[key] and Color3.fromRGB(200, 20, 20) or Color3.fromRGB(80, 0, 0)
 	end)
 end
 
--- Dropdown helper
-local function createDropdown(parent, labelText, options, key)
+-- DROPDOWN
+local function createDropdown(parent, label, options, key)
 	local wrapper = Instance.new("Frame", parent)
 	wrapper.Size = UDim2.new(0.9, 0, 0, 55)
 	wrapper.BackgroundTransparency = 1
 
-	local label = Instance.new("TextLabel", wrapper)
-	label.Size = UDim2.new(1, 0, 0, 20)
-	label.Position = UDim2.new(0, 0, 0, 0)
-	label.Text = labelText
-	label.Font = Enum.Font.Gotham
-	label.TextSize = 13
-	label.BackgroundTransparency = 1
-	label.TextColor3 = Color3.fromRGB(255, 255, 255)
-	label.TextXAlignment = Enum.TextXAlignment.Left
+	local labelText = Instance.new("TextLabel", wrapper)
+	labelText.Size = UDim2.new(1, 0, 0, 20)
+	labelText.Position = UDim2.new(0, 0, 0, 0)
+	labelText.Text = label
+	labelText.Font = Enum.Font.Gotham
+	labelText.TextSize = 13
+	labelText.BackgroundTransparency = 1
+	labelText.TextColor3 = Color3.fromRGB(255, 255, 255)
+	labelText.TextXAlignment = Enum.TextXAlignment.Left
 
 	local dropdown = Instance.new("TextButton", wrapper)
 	dropdown.Size = UDim2.new(1, 0, 0, 30)
 	dropdown.Position = UDim2.new(0, 0, 0, 22)
-	dropdown.BackgroundColor3 = Color3.fromRGB(45, 0, 0)
+	dropdown.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
+	dropdown.BackgroundTransparency = 0.3
 	dropdown.Font = Enum.Font.Gotham
 	dropdown.TextSize = 14
 	dropdown.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -137,44 +150,39 @@ local function createDropdown(parent, labelText, options, key)
 	dropdown.Text = selected
 
 	dropdown.MouseButton1Click:Connect(function()
-		local nextIndex = table.find(options, selected) % #options + 1
-		selected = options[nextIndex]
+		local next = table.find(options, selected) % #options + 1
+		selected = options[next]
 		dropdown.Text = selected
 		savedSettings[key] = selected
 	end)
 end
 
--- Tab/Page creation
-for _, tab in ipairs(tabNames) do
-	local btn = createTabBtn(tab[1], tab[2])
-	tabButtons[tab[1]] = btn
-	local page = createPage(tab[1])
+-- TABS & PAGES
+local tabFishing = createTabBtn("Fishing", "🎣")
+local fishingPage = createPage("Fishing")
+tabFishing.MouseButton1Click:Connect(function()
+	for _, page in pairs(pages) do page.Visible = false end
+	fishingPage.Visible = true
+end)
 
-	btn.MouseButton1Click:Connect(function()
-		for n, p in pairs(pages) do p.Visible = false end
-		page.Visible = true
-	end)
+-- Add sidebar only (like in image)
+local tabNames = {
+	"Configuration", "Fishing", "Autos", "Areas", "Market", "Miscellaneous", "Settings", "Debug"
+}
+for _, name in ipairs(tabNames) do
+	if name ~= "Fishing" then createTabBtn(name, " ") end
 end
 
--- Fishing Page Content
-local fishingPage = pages["Fishing"]
-
-local title = Instance.new("TextLabel", fishingPage)
-title.Size = UDim2.new(1, -20, 0, 30)
-title.Text = "Main"
-title.Font = Enum.Font.GothamBold
-title.TextSize = 18
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.BackgroundTransparency = 1
-title.TextXAlignment = Enum.TextXAlignment.Left
-
+-- Populate Fishing page
+createTitle(fishingPage, "Main")
 createToggle(fishingPage, "Freeze Character", "freezeChar")
 createToggle(fishingPage, "Auto Equip Rod", "autoEquipRod")
 createDropdown(fishingPage, "Equip Rod Event Zone", {"Placeholder"}, "eventRod")
 createDropdown(fishingPage, "Equip Red if Event Zone", {"None"}, "redZoneRod")
 createDropdown(fishingPage, "Equip Rod", {"Aurora Rod"}, "equipRod")
 createToggle(fishingPage, "Non-Blatant Fishing", "nonBlatant")
-createToggle(fishingPage, "Legit Fishing", "legitFish")
+createToggle(fishingPage, "Legit Fishing", "legitFishing")
 
--- Set default visible page
-pages["Fishing"].Visible = true
+-- Show default tab
+fishingPage.Visible = true
+
