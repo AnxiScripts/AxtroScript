@@ -15,22 +15,22 @@ gui.Name = "NativeFishingGUI"
 gui.ResetOnSpawn = false
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- MAIN FRAME
+-- MAIN FRAME (more transparent)
 local main = Instance.new("Frame", gui)
 main.Size = UDim2.new(0, 620, 0, 360)
 main.Position = UDim2.new(0.3, 0, 0.2, 0)
 main.BackgroundColor3 = Color3.fromRGB(70, 0, 0)
-main.BackgroundTransparency = 0.3
+main.BackgroundTransparency = 0.5
 main.BorderSizePixel = 0
 main.Active = true
 main.Draggable = true
 Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
 
--- SIDEBAR
+-- SIDEBAR (slightly more transparent)
 local sidebar = Instance.new("Frame", main)
 sidebar.Size = UDim2.new(0, 150, 1, 0)
 sidebar.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
-sidebar.BackgroundTransparency = 0.4
+sidebar.BackgroundTransparency = 0.55
 sidebar.BorderSizePixel = 0
 Instance.new("UICorner", sidebar).CornerRadius = UDim.new(0, 10)
 
