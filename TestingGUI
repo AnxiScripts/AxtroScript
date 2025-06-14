@@ -26,6 +26,66 @@ main.Active = true
 main.Draggable = true
 Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
 
+-- === TOP BAR HEADER ===
+local topBar = Instance.new("Frame", main)
+topBar.Size = UDim2.new(1, 0, 0, 35)
+topBar.Position = UDim2.new(0, 0, 0, 0)
+topBar.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
+topBar.BackgroundTransparency = 0.3
+topBar.BorderSizePixel = 0
+topBar.ZIndex = 2
+Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 6)
+
+-- Title Text
+local title = Instance.new("TextLabel", topBar)
+title.Size = UDim2.new(0.7, 0, 1, 0)
+title.Position = UDim2.new(0.02, 0, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "Axtro - Steal A BrainRot"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 16
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Minimize Button (-)
+local minimizeBtn = Instance.new("TextButton", topBar)
+minimizeBtn.Size = UDim2.new(0, 25, 0, 25)
+minimizeBtn.Position = UDim2.new(1, -60, 0.5, -12)
+minimizeBtn.Text = "-"
+minimizeBtn.Font = Enum.Font.GothamBold
+minimizeBtn.TextSize = 18
+minimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+minimizeBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
+minimizeBtn.BackgroundTransparency = 0.3
+Instance.new("UICorner", minimizeBtn).CornerRadius = UDim.new(1, 0)
+
+-- Close Button (X)
+local closeBtn = Instance.new("TextButton", topBar)
+closeBtn.Size = UDim2.new(0, 25, 0, 25)
+closeBtn.Position = UDim2.new(1, -30, 0.5, -12)
+closeBtn.Text = "X"
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 16
+closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeBtn.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
+closeBtn.BackgroundTransparency = 0.3
+Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(1, 0)
+
+-- === BUTTON FUNCTIONALITY ===
+local isMinimized = false
+minimizeBtn.MouseButton1Click:Connect(function()
+	isMinimized = not isMinimized
+	for _, v in pairs(main:GetChildren()) do
+		if v ~= topBar then
+			v.Visible = not isMinimized
+		end
+	end
+end)
+
+closeBtn.MouseButton1Click:Connect(function()
+	gui:Destroy()
+end)
+
 -- SIDEBAR (slightly more transparent)
 local sidebar = Instance.new("Frame", main)
 sidebar.Size = UDim2.new(0, 150, 1, 0)
