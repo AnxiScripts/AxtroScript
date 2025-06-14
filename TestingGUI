@@ -14,44 +14,45 @@ gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 -- == Main Frame ==
 local main = Instance.new("Frame", gui)
 main.Position = UDim2.new(0.3, 0, 0.2, 0)
-main.Size = UDim2.new(0, 600, 0, 350)
-main.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-main.BackgroundTransparency = 0.3
+main.Size = UDim2.new(0, 620, 0, 360)
+main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+main.BorderSizePixel = 0
 main.Active = true
 main.Draggable = true
-Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
+Instance.new("UICorner", main).CornerRadius = UDim.new(0, 12)
 
 -- == Sidebar ==
 local sidebar = Instance.new("Frame", main)
-sidebar.Size = UDim2.new(0, 140, 1, 0)
-sidebar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-Instance.new("UICorner", sidebar).CornerRadius = UDim.new(0, 10)
+sidebar.Size = UDim2.new(0, 150, 1, 0)
+sidebar.BackgroundColor3 = Color3.fromRGB(35, 0, 0)
+sidebar.BorderSizePixel = 0
+Instance.new("UICorner", sidebar).CornerRadius = UDim.new(0, 12)
 
 local sideLayout = Instance.new("UIListLayout", sidebar)
-sideLayout.Padding = UDim.new(0, 6)
+sideLayout.Padding = UDim.new(0, 8)
 sideLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 sideLayout.VerticalAlignment = Enum.VerticalAlignment.Top
 
 -- == Tab Button Function ==
 local function createTabBtn(name, icon)
 	local btn = Instance.new("TextButton", sidebar)
-	btn.Size = UDim2.new(1, -10, 0, 30)
-	btn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+	btn.Size = UDim2.new(1, -20, 0, 32)
+	btn.BackgroundColor3 = Color3.fromRGB(60, 10, 10)
 	btn.Text = icon .. "  " .. name
-	btn.Font = Enum.Font.Gotham
-	btn.TextSize = 14
+	btn.Font = Enum.Font.GothamBold
+	btn.TextSize = 15
 	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
 	btn.AutoButtonColor = false
-	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
 	return btn
 end
 
 -- == Content Holder ==
 local contentFrame = Instance.new("Frame", main)
-contentFrame.Position = UDim2.new(0, 145, 0, 0)
-contentFrame.Size = UDim2.new(1, -145, 1, 0)
-contentFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Instance.new("UICorner", contentFrame).CornerRadius = UDim.new(0, 10)
+contentFrame.Position = UDim2.new(0, 155, 0, 0)
+contentFrame.Size = UDim2.new(1, -155, 1, 0)
+contentFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Instance.new("UICorner", contentFrame).CornerRadius = UDim.new(0, 12)
 
 local pages = {}
 
@@ -60,6 +61,10 @@ local function createPage(name)
 	page.Size = UDim2.new(1, 0, 1, 0)
 	page.Visible = false
 	page.BackgroundTransparency = 1
+	local layout = Instance.new("UIListLayout", page)
+	layout.Padding = UDim.new(0, 10)
+	layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	layout.VerticalAlignment = Enum.VerticalAlignment.Top
 	pages[name] = page
 	return page
 end
@@ -67,18 +72,18 @@ end
 -- == Toggle ==
 local function createToggle(parent, text, key)
 	local toggle = Instance.new("TextButton", parent)
-	toggle.Size = UDim2.new(1, -20, 0, 30)
-	toggle.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-	toggle.Text = text .. " [OFF]"
+	toggle.Size = UDim2.new(0.9, 0, 0, 34)
+	toggle.BackgroundColor3 = Color3.fromRGB(45, 0, 0)
 	toggle.Font = Enum.Font.Gotham
 	toggle.TextSize = 14
 	toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+	toggle.AutoButtonColor = false
 	Instance.new("UICorner", toggle).CornerRadius = UDim.new(0, 6)
 
 	local state = savedSettings[key] or false
 	local function updateVisual()
 		toggle.Text = text .. (state and " [ON]" or " [OFF]")
-		toggle.BackgroundColor3 = state and Color3.fromRGB(100, 30, 30) or Color3.fromRGB(40, 40, 40)
+		toggle.BackgroundColor3 = state and Color3.fromRGB(120, 20, 20) or Color3.fromRGB(45, 0, 0)
 	end
 	updateVisual()
 
@@ -91,19 +96,23 @@ end
 
 -- == Dropdown ==
 local function createDropdown(parent, labelText, options, key)
-	local label = Instance.new("TextLabel", parent)
-	label.Size = UDim2.new(1, -20, 0, 20)
+	local wrapper = Instance.new("Frame", parent)
+	wrapper.Size = UDim2.new(0.9, 0, 0, 55)
+	wrapper.BackgroundTransparency = 1
+	local label = Instance.new("TextLabel", wrapper)
+	label.Size = UDim2.new(1, 0, 0, 20)
+	label.Position = UDim2.new(0, 0, 0, 0)
 	label.Text = labelText
 	label.Font = Enum.Font.Gotham
-	label.TextSize = 14
+	label.TextSize = 13
 	label.BackgroundTransparency = 1
 	label.TextColor3 = Color3.fromRGB(255, 255, 255)
 	label.TextXAlignment = Enum.TextXAlignment.Left
 
-	local dropdown = Instance.new("TextButton", parent)
-	dropdown.Size = UDim2.new(1, -20, 0, 30)
-	dropdown.Position = UDim2.new(0, 10, 0, 25)
-	dropdown.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	local dropdown = Instance.new("TextButton", wrapper)
+	dropdown.Size = UDim2.new(1, 0, 0, 30)
+	dropdown.Position = UDim2.new(0, 0, 0, 22)
+	dropdown.BackgroundColor3 = Color3.fromRGB(45, 0, 0)
 	dropdown.Font = Enum.Font.Gotham
 	dropdown.TextSize = 14
 	dropdown.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -136,20 +145,9 @@ fishingTab.MouseButton1Click:Connect(function() switchTab("Fishing") end)
 settingsTab.MouseButton1Click:Connect(function() switchTab("Settings") end)
 
 -- == Add Content ==
-createToggle(fishingPage, "Freeze Character", "freeze")
+createDropdown(fishingPage, "Select Rod", {"Wooden", "Silver", "Diamond"}, "selectedRod")
 createToggle(fishingPage, "Auto Equip Rod", "autoEquip")
+createToggle(fishingPage, "Freeze Character", "freeze")
 
-createDropdown(fishingPage, "Select Rod", {"Placeholder", "None", "Aurora Rod"}, "selectedRod")
-createToggle(settingsPage, "Enable UI Sounds", "sounds")
-
+-- Set default page
 switchTab("Fishing")
-
--- == Keybind Toggle Visibility ==
-UserInputService.InputBegan:Connect(function(input)
-	if input.KeyCode == toggleKey then
-		gui.Enabled = not gui.Enabled
-	end
-end)
-
--- == Save to Global (optional to persist across injections) ==
-getgenv().GUI_Settings = savedSettings
