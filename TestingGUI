@@ -1,17 +1,16 @@
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
--- == Configuration ==
 local toggleKey = Enum.KeyCode.RightShift
 local savedSettings = getgenv().GUI_Settings or {}
 
--- == Screen GUI ==
+-- Main GUI setup
 local gui = Instance.new("ScreenGui", game.CoreGui)
 gui.Name = "AdvancedExploitGUI"
 gui.ResetOnSpawn = false
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- == Main Frame ==
+-- Main Frame
 local main = Instance.new("Frame", gui)
 main.Position = UDim2.new(0.3, 0, 0.2, 0)
 main.Size = UDim2.new(0, 620, 0, 360)
@@ -21,7 +20,7 @@ main.Active = true
 main.Draggable = true
 Instance.new("UICorner", main).CornerRadius = UDim.new(0, 12)
 
--- == Sidebar ==
+-- Sidebar
 local sidebar = Instance.new("Frame", main)
 sidebar.Size = UDim2.new(0, 150, 1, 0)
 sidebar.BackgroundColor3 = Color3.fromRGB(35, 0, 0)
@@ -33,7 +32,7 @@ sideLayout.Padding = UDim.new(0, 8)
 sideLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 sideLayout.VerticalAlignment = Enum.VerticalAlignment.Top
 
--- == Tab Button Function ==
+-- Tab button helper
 local function createTabBtn(name, icon)
 	local btn = Instance.new("TextButton", sidebar)
 	btn.Size = UDim2.new(1, -20, 0, 32)
@@ -47,20 +46,35 @@ local function createTabBtn(name, icon)
 	return btn
 end
 
--- == Content Holder ==
+-- Add all sidebar tabs
+local tabNames = {
+	{ "Configuration", "🛠️" },
+	{ "Fishing", "🎣" },
+	{ "Autos", "🤖" },
+	{ "Areas", "🗺️" },
+	{ "Market", "💰" },
+	{ "Miscellaneous", "📦" },
+	{ "Settings", "⚙️" },
+	{ "Debug", "🐞" }
+}
+
+local pages = {}
+local tabButtons = {}
+
+-- Content Frame
 local contentFrame = Instance.new("Frame", main)
 contentFrame.Position = UDim2.new(0, 155, 0, 0)
 contentFrame.Size = UDim2.new(1, -155, 1, 0)
 contentFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 Instance.new("UICorner", contentFrame).CornerRadius = UDim.new(0, 12)
 
-local pages = {}
-
+-- Page creation helper
 local function createPage(name)
 	local page = Instance.new("Frame", contentFrame)
 	page.Size = UDim2.new(1, 0, 1, 0)
 	page.Visible = false
 	page.BackgroundTransparency = 1
+
 	local layout = Instance.new("UIListLayout", page)
 	layout.Padding = UDim.new(0, 10)
 	layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -69,7 +83,7 @@ local function createPage(name)
 	return page
 end
 
--- == Toggle ==
+-- Toggle helper
 local function createToggle(parent, text, key)
 	local toggle = Instance.new("TextButton", parent)
 	toggle.Size = UDim2.new(0.9, 0, 0, 34)
@@ -94,11 +108,12 @@ local function createToggle(parent, text, key)
 	end)
 end
 
--- == Dropdown ==
+-- Dropdown helper
 local function createDropdown(parent, labelText, options, key)
 	local wrapper = Instance.new("Frame", parent)
 	wrapper.Size = UDim2.new(0.9, 0, 0, 55)
 	wrapper.BackgroundTransparency = 1
+
 	local label = Instance.new("TextLabel", wrapper)
 	label.Size = UDim2.new(1, 0, 0, 20)
 	label.Position = UDim2.new(0, 0, 0, 0)
@@ -129,25 +144,37 @@ local function createDropdown(parent, labelText, options, key)
 	end)
 end
 
--- == Tabs and Pages ==
-local fishingTab = createTabBtn("Fishing", "🎣")
-local settingsTab = createTabBtn("Settings", "⚙️")
-local fishingPage = createPage("Fishing")
-local settingsPage = createPage("Settings")
+-- Tab/Page creation
+for _, tab in ipairs(tabNames) do
+	local btn = createTabBtn(tab[1], tab[2])
+	tabButtons[tab[1]] = btn
+	local page = createPage(tab[1])
 
--- == Tab Logic ==
-local function switchTab(name)
-	for i, p in pairs(pages) do
-		p.Visible = (i == name)
-	end
+	btn.MouseButton1Click:Connect(function()
+		for n, p in pairs(pages) do p.Visible = false end
+		page.Visible = true
+	end)
 end
-fishingTab.MouseButton1Click:Connect(function() switchTab("Fishing") end)
-settingsTab.MouseButton1Click:Connect(function() switchTab("Settings") end)
 
--- == Add Content ==
-createDropdown(fishingPage, "Select Rod", {"Wooden", "Silver", "Diamond"}, "selectedRod")
-createToggle(fishingPage, "Auto Equip Rod", "autoEquip")
-createToggle(fishingPage, "Freeze Character", "freeze")
+-- Fishing Page Content
+local fishingPage = pages["Fishing"]
 
--- Set default page
-switchTab("Fishing")
+local title = Instance.new("TextLabel", fishingPage)
+title.Size = UDim2.new(1, -20, 0, 30)
+title.Text = "Main"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.BackgroundTransparency = 1
+title.TextXAlignment = Enum.TextXAlignment.Left
+
+createToggle(fishingPage, "Freeze Character", "freezeChar")
+createToggle(fishingPage, "Auto Equip Rod", "autoEquipRod")
+createDropdown(fishingPage, "Equip Rod Event Zone", {"Placeholder"}, "eventRod")
+createDropdown(fishingPage, "Equip Red if Event Zone", {"None"}, "redZoneRod")
+createDropdown(fishingPage, "Equip Rod", {"Aurora Rod"}, "equipRod")
+createToggle(fishingPage, "Non-Blatant Fishing", "nonBlatant")
+createToggle(fishingPage, "Legit Fishing", "legitFish")
+
+-- Set default visible page
+pages["Fishing"].Visible = true
