@@ -1,171 +1,162 @@
-pcall(function() game.CoreGui:FindFirstChild("NativeStyleUI"):Destroy() end)
+-- Destroy previous GUI instance if injected again
+pcall(function() game.CoreGui:FindFirstChild("CodeNinjaUI"):Destroy() end)
 
--- Setup
-local gui = Instance.new("ScreenGui", game.CoreGui)
-gui.Name = "NativeStyleUI"
-gui.ResetOnSpawn = false
-
--- Blur Background
-local blur = Instance.new("BlurEffect", game.Lighting)
-blur.Size = 20
+-- Create UI screen
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+ScreenGui.Name = "CodeNinjaUI"
+ScreenGui.ResetOnSpawn = false
 
 -- Main Frame
-local main = Instance.new("Frame", gui)
-main.Size = UDim2.new(0, 600, 0, 350)
-main.Position = UDim2.new(0.5, -300, 0.5, -175)
-main.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
-main.BorderSizePixel = 0
-main.Active = true
-main.Draggable = true
+local MainFrame = Instance.new("Frame", ScreenGui)
+MainFrame.Size = UDim2.new(0, 600, 0, 350)
+MainFrame.Position = UDim2.new(0.5, -300, 0.5, -175)
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true
+local corner = Instance.new("UICorner", MainFrame)
+corner.CornerRadius = UDim.new(0, 10)
 
--- UICorner for smooth round
-local corner = Instance.new("UICorner", main)
-corner.CornerRadius = UDim.new(0, 12)
-
--- TitleBar
-local title = Instance.new("TextLabel", main)
-title.Size = UDim2.new(1, 0, 0, 40)
-title.BackgroundTransparency = 1
-title.Text = "⚡ CodeNinja Exploit GUI"
-title.Font = Enum.Font.GothamBold
-title.TextSize = 18
-title.TextColor3 = Color3.fromRGB(255,255,255)
+-- Title
+local Title = Instance.new("TextLabel", MainFrame)
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.BackgroundTransparency = 1
+Title.Text = "⚡ CodeNinja UI"
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 18
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 -- Sidebar
-local sidebar = Instance.new("Frame", main)
-sidebar.Size = UDim2.new(0, 150, 1, -40)
-sidebar.Position = UDim2.new(0, 0, 0, 40)
-sidebar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-Instance.new("UICorner", sidebar).CornerRadius = UDim.new(0, 10)
+local Sidebar = Instance.new("Frame", MainFrame)
+Sidebar.Size = UDim2.new(0, 140, 1, -40)
+Sidebar.Position = UDim2.new(0, 0, 0, 40)
+Sidebar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Instance.new("UICorner", Sidebar).CornerRadius = UDim.new(0, 8)
 
--- Tab Buttons
-local tabNames = {"Scripts", "Settings", "Credits"}
+-- Content Frame
+local Content = Instance.new("Frame", MainFrame)
+Content.Size = UDim2.new(1, -150, 1, -50)
+Content.Position = UDim2.new(0, 150, 0, 45)
+Content.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Instance.new("UICorner", Content).CornerRadius = UDim.new(0, 8)
+
+-- Tab system
 local Tabs = {}
-local selectedTab
-
-local function createTabButton(name, order)
-	local btn = Instance.new("TextButton", sidebar)
-	btn.Size = UDim2.new(1, -10, 0, 40)
-	btn.Position = UDim2.new(0, 5, 0, (order - 1) * 45 + 10)
+local TabNames = {"Scripts", "Settings", "Credits"}
+local function CreateTab(name, index)
+	local btn = Instance.new("TextButton", Sidebar)
+	btn.Size = UDim2.new(1, -20, 0, 40)
+	btn.Position = UDim2.new(0, 10, 0, (index - 1) * 50 + 10)
 	btn.Text = "📁 " .. name
 	btn.Font = Enum.Font.Gotham
 	btn.TextSize = 14
-	btn.TextColor3 = Color3.fromRGB(255,255,255)
 	btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
 	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
 
+	local tabFrame = Instance.new("Frame", Content)
+	tabFrame.Size = UDim2.new(1, 0, 1, 0)
+	tabFrame.BackgroundTransparency = 1
+	tabFrame.Visible = (index == 1)
+	Tabs[name] = tabFrame
+
 	btn.MouseButton1Click:Connect(function()
-		for _, t in pairs(Tabs) do t.Visible = false end
-		Tabs[name].Visible = true
+		for _, v in pairs(Tabs) do v.Visible = false end
+		tabFrame.Visible = true
 	end)
-
-	return btn
 end
 
--- Content Holder
-local content = Instance.new("Frame", main)
-content.Size = UDim2.new(1, -160, 1, -50)
-content.Position = UDim2.new(0, 160, 0, 45)
-content.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
-Instance.new("UICorner", content).CornerRadius = UDim.new(0, 10)
-
--- Create each tab frame
-for i, tabName in ipairs(tabNames) do
-	local tab = Instance.new("Frame", content)
-	tab.Name = tabName
-	tab.Size = UDim2.new(1, 0, 1, 0)
-	tab.BackgroundTransparency = 1
-	tab.Visible = (i == 1)
-	Tabs[tabName] = tab
-
-	createTabButton(tabName, i)
+for i, tabName in ipairs(TabNames) do
+	CreateTab(tabName, i)
 end
 
--- === SCRIPTS TAB CONTENT ===
+-- === Scripts Tab ===
 do
 	local tab = Tabs["Scripts"]
 
-	local button = Instance.new("TextButton", tab)
-	button.Size = UDim2.new(0, 200, 0, 40)
-	button.Position = UDim2.new(0, 20, 0, 20)
-	button.Text = "🌌 Infinite Yield"
-	button.Font = Enum.Font.Gotham
-	button.TextSize = 14
-	button.TextColor3 = Color3.fromRGB(255,255,255)
-	button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-	Instance.new("UICorner", button).CornerRadius = UDim.new(0, 8)
+	local InfiniteBtn = Instance.new("TextButton", tab)
+	InfiniteBtn.Size = UDim2.new(0, 200, 0, 35)
+	InfiniteBtn.Position = UDim2.new(0, 20, 0, 20)
+	InfiniteBtn.Text = "🌌 Load Infinite Yield"
+	InfiniteBtn.Font = Enum.Font.Gotham
+	InfiniteBtn.TextSize = 14
+	InfiniteBtn.TextColor3 = Color3.fromRGB(255,255,255)
+	InfiniteBtn.BackgroundColor3 = Color3.fromRGB(50,50,50)
+	Instance.new("UICorner", InfiniteBtn).CornerRadius = UDim.new(0, 6)
 
-	button.MouseButton1Click:Connect(function()
+	InfiniteBtn.MouseButton1Click:Connect(function()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
 	end)
 
-	local urlBox = Instance.new("TextBox", tab)
-	urlBox.Size = UDim2.new(0, 300, 0, 35)
-	urlBox.Position = UDim2.new(0, 20, 0, 75)
-	urlBox.PlaceholderText = "Paste Raw GitHub Script URL..."
-	urlBox.Font = Enum.Font.Gotham
-	urlBox.TextSize = 13
-	urlBox.BackgroundColor3 = Color3.fromRGB(35,35,35)
-	urlBox.TextColor3 = Color3.fromRGB(255,255,255)
-	Instance.new("UICorner", urlBox).CornerRadius = UDim.new(0, 6)
+	local UrlBox = Instance.new("TextBox", tab)
+	UrlBox.Size = UDim2.new(0, 300, 0, 30)
+	UrlBox.Position = UDim2.new(0, 20, 0, 70)
+	UrlBox.PlaceholderText = "Paste GitHub Raw URL..."
+	UrlBox.Text = ""
+	UrlBox.Font = Enum.Font.Gotham
+	UrlBox.TextSize = 13
+	UrlBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	UrlBox.TextColor3 = Color3.fromRGB(255,255,255)
+	Instance.new("UICorner", UrlBox).CornerRadius = UDim.new(0, 6)
 
-	local runBtn = Instance.new("TextButton", tab)
-	runBtn.Size = UDim2.new(0, 100, 0, 35)
-	runBtn.Position = UDim2.new(0, 330, 0, 75)
-	runBtn.Text = "🚀 Run"
-	runBtn.Font = Enum.Font.GothamBold
-	runBtn.TextSize = 14
-	runBtn.TextColor3 = Color3.fromRGB(255,255,255)
-	runBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
-	Instance.new("UICorner", runBtn).CornerRadius = UDim.new(0, 6)
+	local RunBtn = Instance.new("TextButton", tab)
+	RunBtn.Size = UDim2.new(0, 100, 0, 30)
+	RunBtn.Position = UDim2.new(0, 330, 0, 70)
+	RunBtn.Text = "🚀 Run"
+	RunBtn.Font = Enum.Font.GothamBold
+	RunBtn.TextSize = 14
+	RunBtn.TextColor3 = Color3.fromRGB(255,255,255)
+	RunBtn.BackgroundColor3 = Color3.fromRGB(70,70,70)
+	Instance.new("UICorner", RunBtn).CornerRadius = UDim.new(0, 6)
 
-	runBtn.MouseButton1Click:Connect(function()
-		local url = urlBox.Text
+	RunBtn.MouseButton1Click:Connect(function()
+		local url = UrlBox.Text
 		if url:match("^https?://") then
-			pcall(function() loadstring(game:HttpGet(url))() end)
+			pcall(function()
+				loadstring(game:HttpGet(url))()
+			end)
 		end
 	end)
 end
 
--- === SETTINGS TAB CONTENT ===
+-- === Settings Tab ===
 do
 	local tab = Tabs["Settings"]
 	local toggle = Instance.new("TextButton", tab)
-	toggle.Size = UDim2.new(0, 200, 0, 40)
+	toggle.Size = UDim2.new(0, 200, 0, 35)
 	toggle.Position = UDim2.new(0, 20, 0, 20)
 	toggle.Font = Enum.Font.Gotham
 	toggle.TextSize = 14
-	toggle.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-	toggle.TextColor3 = Color3.fromRGB(255,255,255)
+	toggle.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+	toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
 	Instance.new("UICorner", toggle).CornerRadius = UDim.new(0, 8)
 
 	local state = false
-	local function updateToggle()
+	local function UpdateToggle()
 		toggle.Text = "🔘 Auto ESP: " .. (state and "ON" or "OFF")
-		toggle.BackgroundColor3 = state and Color3.fromRGB(80, 120, 255) or Color3.fromRGB(45, 45, 45)
+		toggle.BackgroundColor3 = state and Color3.fromRGB(100, 180, 255) or Color3.fromRGB(50, 50, 50)
 	end
+
 	toggle.MouseButton1Click:Connect(function()
 		state = not state
-		updateToggle()
+		UpdateToggle()
 	end)
-	updateToggle()
+
+	UpdateToggle()
 end
 
--- === CREDITS TAB ===
+-- === Credits Tab ===
 do
 	local tab = Tabs["Credits"]
-	local label = Instance.new("TextLabel", tab)
-	label.Size = UDim2.new(1, -40, 1, -40)
-	label.Position = UDim2.new(0, 20, 0, 20)
-	label.TextWrapped = true
-	label.TextXAlignment = Enum.TextXAlignment.Left
-	label.BackgroundTransparency = 1
-	label.TextColor3 = Color3.fromRGB(200, 200, 200)
-	label.Font = Enum.Font.Gotham
-	label.TextSize = 15
-	label.Text = "Made with 🥷 by CodeNinja\nInspired by Native UI / SpeedHubX\nUse responsibly — no TOS breaking."
-end
-
-	InfoText.Font = Enum.Font.Gotham
-	InfoText.TextSize = 14
+	local lbl = Instance.new("TextLabel", tab)
+	lbl.Size = UDim2.new(1, -40, 1, -40)
+	lbl.Position = UDim2.new(0, 20, 0, 20)
+	lbl.BackgroundTransparency = 1
+	lbl.Font = Enum.Font.Gotham
+	lbl.TextSize = 14
+	lbl.TextColor3 = Color3.fromRGB(220,220,220)
+	lbl.TextWrapped = true
+	lbl.TextXAlignment = Enum.TextXAlignment.Left
+	lbl.TextYAlignment = Enum.TextYAlignment.Top
+	lbl.Text = "🧠 CodeNinja GUI\nInspired by SpeedHubX & Native UIs.\nCustom-built without libraries.\nUse responsibly."
 end
