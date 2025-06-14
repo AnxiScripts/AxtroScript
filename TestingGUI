@@ -1,5 +1,3 @@
--- ⚠️ Run in executor (Synapse X, Fluxus, etc)
--- Auto-kill duplicate
 pcall(function() game.CoreGui:FindFirstChild("NativeStyleUI"):Destroy() end)
 
 -- Setup
