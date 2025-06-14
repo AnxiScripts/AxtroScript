@@ -1,165 +1,173 @@
--- Destroy previous instance if re-injected
-pcall(function() game.CoreGui:FindFirstChild("NinjaGUI"):Destroy() end)
+-- ⚠️ Run in executor (Synapse X, Fluxus, etc)
+-- Auto-kill duplicate
+pcall(function() game.CoreGui:FindFirstChild("NativeStyleUI"):Destroy() end)
 
--- Create UI
-local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
-ScreenGui.Name = "NinjaGUI"
-ScreenGui.ResetOnSpawn = false
+-- Setup
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "NativeStyleUI"
+gui.ResetOnSpawn = false
 
-local Frame = Instance.new("Frame", ScreenGui)
-Frame.Size = UDim2.new(0, 400, 0, 300)
-Frame.Position = UDim2.new(0.3, 0, 0.3, 0)
-Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-Frame.BorderSizePixel = 0
-Frame.Active = true
-Frame.Draggable = true
+-- Blur Background
+local blur = Instance.new("BlurEffect", game.Lighting)
+blur.Size = 20
 
--- Title
-local Title = Instance.new("TextLabel", Frame)
-Title.Size = UDim2.new(1, 0, 0, 30)
-Title.BackgroundTransparency = 1
-Title.Text = "🥷 CodeNinja Exploit GUI"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.Font = Enum.Font.GothamBold
-Title.TextSize = 16
+-- Main Frame
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.new(0, 600, 0, 350)
+main.Position = UDim2.new(0.5, -300, 0.5, -175)
+main.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+main.BorderSizePixel = 0
+main.Active = true
+main.Draggable = true
 
--- Tabs
+-- UICorner for smooth round
+local corner = Instance.new("UICorner", main)
+corner.CornerRadius = UDim.new(0, 12)
+
+-- TitleBar
+local title = Instance.new("TextLabel", main)
+title.Size = UDim2.new(1, 0, 0, 40)
+title.BackgroundTransparency = 1
+title.Text = "⚡ CodeNinja Exploit GUI"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+title.TextColor3 = Color3.fromRGB(255,255,255)
+
+-- Sidebar
+local sidebar = Instance.new("Frame", main)
+sidebar.Size = UDim2.new(0, 150, 1, -40)
+sidebar.Position = UDim2.new(0, 0, 0, 40)
+sidebar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Instance.new("UICorner", sidebar).CornerRadius = UDim.new(0, 10)
+
+-- Tab Buttons
+local tabNames = {"Scripts", "Settings", "Credits"}
 local Tabs = {}
-local tabNames = {"Scripts", "Settings", "Info"}
-for i, name in ipairs(tabNames) do
-	local TabBtn = Instance.new("TextButton", Frame)
-	TabBtn.Size = UDim2.new(0, 100, 0, 25)
-	TabBtn.Position = UDim2.new(0, (i-1)*100, 0, 30)
-	TabBtn.Text = name
-	TabBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-	TabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-	TabBtn.Font = Enum.Font.Gotham
-	TabBtn.TextSize = 14
+local selectedTab
 
-	local TabFrame = Instance.new("Frame", Frame)
-	TabFrame.Size = UDim2.new(1, 0, 1, -60)
-	TabFrame.Position = UDim2.new(0, 0, 0, 60)
-	TabFrame.BackgroundTransparency = 1
-	TabFrame.Visible = (i == 1)
-	Tabs[name] = TabFrame
+local function createTabButton(name, order)
+	local btn = Instance.new("TextButton", sidebar)
+	btn.Size = UDim2.new(1, -10, 0, 40)
+	btn.Position = UDim2.new(0, 5, 0, (order - 1) * 45 + 10)
+	btn.Text = "📁 " .. name
+	btn.Font = Enum.Font.Gotham
+	btn.TextSize = 14
+	btn.TextColor3 = Color3.fromRGB(255,255,255)
+	btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
 
-	TabBtn.MouseButton1Click:Connect(function()
-		for _, v in pairs(Tabs) do v.Visible = false end
-		TabFrame.Visible = true
+	btn.MouseButton1Click:Connect(function()
+		for _, t in pairs(Tabs) do t.Visible = false end
+		Tabs[name].Visible = true
 	end)
+
+	return btn
 end
 
--- Scripts Tab Content
+-- Content Holder
+local content = Instance.new("Frame", main)
+content.Size = UDim2.new(1, -160, 1, -50)
+content.Position = UDim2.new(0, 160, 0, 45)
+content.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+Instance.new("UICorner", content).CornerRadius = UDim.new(0, 10)
+
+-- Create each tab frame
+for i, tabName in ipairs(tabNames) do
+	local tab = Instance.new("Frame", content)
+	tab.Name = tabName
+	tab.Size = UDim2.new(1, 0, 1, 0)
+	tab.BackgroundTransparency = 1
+	tab.Visible = (i == 1)
+	Tabs[tabName] = tab
+
+	createTabButton(tabName, i)
+end
+
+-- === SCRIPTS TAB CONTENT ===
 do
-	local parent = Tabs["Scripts"]
+	local tab = Tabs["Scripts"]
 
-	local ExecuteBtn = Instance.new("TextButton", parent)
-	ExecuteBtn.Size = UDim2.new(0, 200, 0, 30)
-	ExecuteBtn.Position = UDim2.new(0, 20, 0, 10)
-	ExecuteBtn.Text = "Infinite Yield Admin"
-	ExecuteBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-	ExecuteBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-	ExecuteBtn.Font = Enum.Font.Gotham
-	ExecuteBtn.TextSize = 14
+	local button = Instance.new("TextButton", tab)
+	button.Size = UDim2.new(0, 200, 0, 40)
+	button.Position = UDim2.new(0, 20, 0, 20)
+	button.Text = "🌌 Infinite Yield"
+	button.Font = Enum.Font.Gotham
+	button.TextSize = 14
+	button.TextColor3 = Color3.fromRGB(255,255,255)
+	button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	Instance.new("UICorner", button).CornerRadius = UDim.new(0, 8)
 
-	ExecuteBtn.MouseButton1Click:Connect(function()
+	button.MouseButton1Click:Connect(function()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
 	end)
 
-	local InputBox = Instance.new("TextBox", parent)
-	InputBox.Size = UDim2.new(0, 200, 0, 30)
-	InputBox.Position = UDim2.new(0, 20, 0, 50)
-	InputBox.PlaceholderText = "Enter raw GitHub URL..."
-	InputBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-	InputBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-	InputBox.Font = Enum.Font.Code
-	InputBox.TextSize = 14
+	local urlBox = Instance.new("TextBox", tab)
+	urlBox.Size = UDim2.new(0, 300, 0, 35)
+	urlBox.Position = UDim2.new(0, 20, 0, 75)
+	urlBox.PlaceholderText = "Paste Raw GitHub Script URL..."
+	urlBox.Font = Enum.Font.Gotham
+	urlBox.TextSize = 13
+	urlBox.BackgroundColor3 = Color3.fromRGB(35,35,35)
+	urlBox.TextColor3 = Color3.fromRGB(255,255,255)
+	Instance.new("UICorner", urlBox).CornerRadius = UDim.new(0, 6)
 
-	local LoadBtn = Instance.new("TextButton", parent)
-	LoadBtn.Size = UDim2.new(0, 100, 0, 30)
-	LoadBtn.Position = UDim2.new(0, 230, 0, 50)
-	LoadBtn.Text = "Run URL"
-	LoadBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-	LoadBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-	LoadBtn.Font = Enum.Font.Gotham
-	LoadBtn.TextSize = 14
+	local runBtn = Instance.new("TextButton", tab)
+	runBtn.Size = UDim2.new(0, 100, 0, 35)
+	runBtn.Position = UDim2.new(0, 330, 0, 75)
+	runBtn.Text = "🚀 Run"
+	runBtn.Font = Enum.Font.GothamBold
+	runBtn.TextSize = 14
+	runBtn.TextColor3 = Color3.fromRGB(255,255,255)
+	runBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+	Instance.new("UICorner", runBtn).CornerRadius = UDim.new(0, 6)
 
-	LoadBtn.MouseButton1Click:Connect(function()
-		local url = InputBox.Text
+	runBtn.MouseButton1Click:Connect(function()
+		local url = urlBox.Text
 		if url:match("^https?://") then
-			pcall(function()
-				loadstring(game:HttpGet(url))()
-			end)
+			pcall(function() loadstring(game:HttpGet(url))() end)
 		end
 	end)
 end
 
--- Settings Tab
+-- === SETTINGS TAB CONTENT ===
 do
-	local parent = Tabs["Settings"]
+	local tab = Tabs["Settings"]
+	local toggle = Instance.new("TextButton", tab)
+	toggle.Size = UDim2.new(0, 200, 0, 40)
+	toggle.Position = UDim2.new(0, 20, 0, 20)
+	toggle.Font = Enum.Font.Gotham
+	toggle.TextSize = 14
+	toggle.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	toggle.TextColor3 = Color3.fromRGB(255,255,255)
+	Instance.new("UICorner", toggle).CornerRadius = UDim.new(0, 8)
 
-	local Toggle = Instance.new("TextButton", parent)
-	Toggle.Size = UDim2.new(0, 150, 0, 30)
-	Toggle.Position = UDim2.new(0, 20, 0, 10)
-	Toggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-	Toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
-	Toggle.Font = Enum.Font.Gotham
-	Toggle.TextSize = 14
-
-	local toggleState = false
+	local state = false
 	local function updateToggle()
-		Toggle.Text = "Toggle ESP: " .. (toggleState and "ON" or "OFF")
+		toggle.Text = "🔘 Auto ESP: " .. (state and "ON" or "OFF")
+		toggle.BackgroundColor3 = state and Color3.fromRGB(80, 120, 255) or Color3.fromRGB(45, 45, 45)
 	end
-
-	Toggle.MouseButton1Click:Connect(function()
-		toggleState = not toggleState
+	toggle.MouseButton1Click:Connect(function()
+		state = not state
 		updateToggle()
 	end)
-
 	updateToggle()
-
-	-- Slider (visual only, logic ready)
-	local SliderFrame = Instance.new("Frame", parent)
-	SliderFrame.Size = UDim2.new(0, 200, 0, 10)
-	SliderFrame.Position = UDim2.new(0, 20, 0, 60)
-	SliderFrame.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-
-	local SliderBtn = Instance.new("TextButton", SliderFrame)
-	SliderBtn.Size = UDim2.new(0, 10, 0, 20)
-	SliderBtn.Position = UDim2.new(0, 0, -0.5, 0)
-	SliderBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	SliderBtn.Text = ""
-
-	local dragging = false
-	SliderBtn.MouseButton1Down:Connect(function()
-		dragging = true
-	end)
-	game:GetService("UserInputService").InputEnded:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			dragging = false
-		end
-	end)
-	game:GetService("RunService").RenderStepped:Connect(function()
-		if dragging then
-			local mouseX = game.Players.LocalPlayer:GetMouse().X
-			local guiX = SliderFrame.AbsolutePosition.X
-			local rel = math.clamp(mouseX - guiX, 0, SliderFrame.AbsoluteSize.X)
-			SliderBtn.Position = UDim2.new(0, rel - 5, -0.5, 0)
-			-- You can use: rel / SliderFrame.AbsoluteSize.X as slider value (0-1)
-		end
-	end)
 end
 
--- Info Tab
+-- === CREDITS TAB ===
 do
-	local parent = Tabs["Info"]
-	local InfoText = Instance.new("TextLabel", parent)
-	InfoText.Size = UDim2.new(1, -40, 1, -40)
-	InfoText.Position = UDim2.new(0, 20, 0, 20)
-	InfoText.BackgroundTransparency = 1
-	InfoText.TextColor3 = Color3.fromRGB(255, 255, 255)
-	InfoText.TextWrapped = true
-	InfoText.Text = "This GUI was created by 🥷 CodeNinja. Use with caution in exploit environment only. Do not use to violate TOS."
+	local tab = Tabs["Credits"]
+	local label = Instance.new("TextLabel", tab)
+	label.Size = UDim2.new(1, -40, 1, -40)
+	label.Position = UDim2.new(0, 20, 0, 20)
+	label.TextWrapped = true
+	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.BackgroundTransparency = 1
+	label.TextColor3 = Color3.fromRGB(200, 200, 200)
+	label.Font = Enum.Font.Gotham
+	label.TextSize = 15
+	label.Text = "Made with 🥷 by CodeNinja\nInspired by Native UI / SpeedHubX\nUse responsibly — no TOS breaking."
+end
+
 	InfoText.Font = Enum.Font.Gotham
 	InfoText.TextSize = 14
 end
