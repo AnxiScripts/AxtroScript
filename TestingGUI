@@ -1,15 +1,23 @@
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/REDzHUB/RedzLibV5/main/Source.Lua"))()
+local success, redzlib = pcall(function()
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/REDzHUB/RedzLibV5/main/Source.Lua"))()
+end)
 
+if not success or not redzlib then
+    warn("❌ Failed to load RedzLib")
+    return
+end
+
+-- Create window
 local Window = redzlib:MakeWindow({
     Title = "Test",
     SubTitle = "hello",
     SaveFolder = "Redz Config"
 })
 
--- Tabs
-local Tab1 = Window:MakeTab({"Tab 1", "cool"})
+-- Create tab
+local Tab1 = Window:MakeTab({ "Tab 1", "cool" })
 
--- Button
+-- Add button
 Tab1:AddButton({
     Name = "Print",
     Callback = function()
@@ -17,7 +25,7 @@ Tab1:AddButton({
     end
 })
 
--- Toggle
+-- Add toggle
 local Toggle1 = Tab1:AddToggle({
     Name = "Speed",
     Description = "Idk",
@@ -27,7 +35,25 @@ local Toggle1 = Tab1:AddToggle({
     end
 })
 
--- Slider
+-- Set WalkSpeed logic
+local function setWalkSpeed(value)
+    local player = game.Players.LocalPlayer
+    if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+        player.Character.Humanoid.WalkSpeed = value
+    end
+end
+
+-- Connect on character respawn
+local player = game.Players.LocalPlayer
+player.CharacterAdded:Connect(function(char)
+    -- Optional: reapply default or last value if saved
+    wait(1) -- small delay to ensure Humanoid exists
+    if char:FindFirstChild("Humanoid") then
+        char.Humanoid.WalkSpeed = 16
+    end
+end)
+
+-- Add slider for WalkSpeed
 Tab1:AddSlider({
     Name = "Speed",
     Min = 1,
@@ -35,9 +61,7 @@ Tab1:AddSlider({
     Increase = 1,
     Default = 16,
     Callback = function(Value)
-        local player = game.Players.LocalPlayer
-        if player and player.Character and player.Character:FindFirstChild("Humanoid") then
-            player.Character.Humanoid.WalkSpeed = Value
-        end
+        setWalkSpeed(Value)
     end
 })
+
