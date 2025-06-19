@@ -1,67 +1,21 @@
-local success, redzlib = pcall(function()
-    return loadstring(game:HttpGet("https://raw.githubusercontent.com/REDzHUB/RedzLibV5/main/Source.Lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ConManDeveloper/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("My Kavo UI", "DarkTheme")
+
+-- Main Tab
+local MainTab = Window:NewTab("Main")
+local MainSection = MainTab:NewSection("Controls")
+
+MainSection:NewButton("Say Hello", "Prints to the console", function()
+    print("Hello, world!")
 end)
 
-if not success or not redzlib then
-    warn("❌ Failed to load RedzLib")
-    return
-end
+MainSection:NewToggle("Enable Speed", "Toggles speed setting", function(state)
+    print("Speed Enabled:", state)
+end)
 
--- Create window
-local Window = redzlib:MakeWindow({
-    Title = "Test",
-    SubTitle = "hello",
-    SaveFolder = "Redz Config"
-})
-
--- Create tab
-local Tab1 = Window:MakeTab({ "Tab 1", "cool" })
-
--- Add button
-Tab1:AddButton({
-    Name = "Print",
-    Callback = function()
-        print("Hello World!")
-    end
-})
-
--- Add toggle
-local Toggle1 = Tab1:AddToggle({
-    Name = "Speed",
-    Description = "Idk",
-    Default = false,
-    Callback = function(state)
-        print("Speed Toggle:", state)
-    end
-})
-
--- Set WalkSpeed logic
-local function setWalkSpeed(value)
+MainSection:NewSlider("WalkSpeed", "Changes your speed", 100, 16, function(value)
     local player = game.Players.LocalPlayer
     if player and player.Character and player.Character:FindFirstChild("Humanoid") then
         player.Character.Humanoid.WalkSpeed = value
     end
-end
-
--- Connect on character respawn
-local player = game.Players.LocalPlayer
-player.CharacterAdded:Connect(function(char)
-    -- Optional: reapply default or last value if saved
-    wait(1) -- small delay to ensure Humanoid exists
-    if char:FindFirstChild("Humanoid") then
-        char.Humanoid.WalkSpeed = 16
-    end
 end)
-
--- Add slider for WalkSpeed
-Tab1:AddSlider({
-    Name = "Speed",
-    Min = 1,
-    Max = 100,
-    Increase = 1,
-    Default = 16,
-    Callback = function(Value)
-        setWalkSpeed(Value)
-    end
-})
-
