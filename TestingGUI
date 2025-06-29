@@ -1,79 +1,77 @@
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/kav"))()
-local Window = Library.CreateLib("TITLE", "DarkTheme")
-local Tab = Window:NewTab("TabName")
-local Section = Tab:NewSection("Section Name")
-Section:NewButton("ButtonText", "ButtonInfo", function()
-    print("Clicked")
-end)
-button:UpdateButton("New Text")
-Section:NewToggle("ToggleText", "ToggleInfo", function(state)
-    if state then
-        print("Toggle On")
-    else
-        print("Toggle Off")
+-- Load the UI Library
+local Library = loadstring(game:HttpGet("https://rscripts.net/raw/speed-hub-x-or-ui-library_1750275966261_YDZ4LJmVtv.txt", true))()
+
+-- Create the main window
+local Window = Library:CreateWindow("Merqury v1.3")
+
+-- Create tabs
+local MainTab = Window:CreateTab("Main")
+local PlayerTab = Window:CreateTab("Player")
+local SettingsTab = Window:CreateTab("Settings")
+
+-- === Main Tab ===
+MainTab:CreateButton("Kill All", function()
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player ~= game.Players.LocalPlayer then
+            -- Replace with your actual kill logic
+            print("Killing:", player.Name)
+        end
     end
 end)
-getgenv().Toggled = false
 
-local toggle = Section:NewToggle("Toggle", "Info", (state)
-    getgenv().Toggled = state
-end)
-
-game:GetService("RunService").RenderStepped:Connect(function()
-	if getgenv().Toggled then
-		toggle:UpdateToggle("Toggle On")
-	else
-		toggle:UpdateToggle("Toggle Off")
-	end
-end)
-Section:NewSlider("SliderText", "SliderInfo", 500, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
-end)
-Section:NewTextBox("TextboxText", "TextboxInfo", function(txt)
-	print(txt)
+MainTab:CreateToggle("Infinite Jump", function(state)
+    if state then
+        print("Infinite Jump Enabled")
+        game:GetService("UserInputService").JumpRequest:Connect(function()
+            game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+        end)
+    else
+        print("Infinite Jump Disabled")
+        -- No easy way to disconnect unless using a variable
+    end
 end)
 
-Section:NewKeybind("KeybindText", "KeybindInfo", Enum.KeyCode.F, function()
-	print("You just clicked the bind")
+MainTab:CreateSlider("WalkSpeed", 16, 200, function(value)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value
 end)
 
-Section:NewKeybind("KeybindText", "KeybindInfo", Enum.KeyCode.F, function()
-	Library:ToggleUI()
-end)
-Section:NewDropdown("DropdownText", "DropdownInf", {"Option 1", "Option 2", "Option 3"}, function(currentOption)
-    print(currentOption)
+-- === Player Tab ===
+PlayerTab:CreateButton("Fly", function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/YQK8AbzD"))() -- Example basic fly script
 end)
 
-local oldList = {
-  "2019",
-  "2020"
-}
-local newList = {
-  "2021",
-  "2022"
-}
-local dropdown = Section:NewDropdown("Dropdown","Info", oldList, function()
+PlayerTab:CreateToggle("Godmode", function(state)
+    if state then
+        local char = game.Players.LocalPlayer.Character
+        if char and char:FindFirstChild("Humanoid") then
+            char.Humanoid.Name = "1"
+            local hum = char["1"]:Clone()
+            hum.Parent = char
+            hum.Name = "Humanoid"
+            wait(0.1)
+            char["1"]:Destroy()
+            workspace.CurrentCamera.CameraSubject = char
+            print("Godmode enabled")
+        end
+    else
+        print("Godmode toggle off (requires rejoin to disable)")
+    end
+end)
 
-end)
-Section:NewButton("Update Dropdown", "Refreshes Dropdown", function()
-  dropdown:Refresh(newList)
-end)
-Section:NewColorPicker("Color Text", "Color Info", Color3.fromRGB(0,0,0), function(color)
-    print(color)
-    -- Second argument is the default color
+PlayerTab:CreateButton("Teleport to Spawn", function()
+    local spawn = workspace:FindFirstChild("SpawnLocation") or game.Workspace:FindFirstChildWhichIsA("SpawnLocation")
+    if spawn then
+        game.Players.LocalPlayer.Character:MoveTo(spawn.Position)
+    else
+        print("No spawn found.")
+    end
 end)
 
-local colors = {
-    SchemeColor = Color3.fromRGB(0,255,255),
-    Background = Color3.fromRGB(0, 0, 0),
-    Header = Color3.fromRGB(0, 0, 0),
-    TextColor = Color3.fromRGB(255,255,255),
-    ElementColor = Color3.fromRGB(20, 20, 20)
-}
-local Window = Library.CreateLib("TITLE", colors)
-for theme, color in pairs(themes) do
-    Section:NewColorPicker(theme, "Change your "..theme, color, function(color3)
-        Library:ChangeColor(theme, color3)
-    end)
-end
+-- === Settings Tab ===
+SettingsTab:CreateButton("Destroy GUI", function()
+    game.CoreGui:FindFirstChild("ScreenGui"):Destroy()
+end)
+
+SettingsTab:CreateLabel("Made by Kenneth")
+
 
