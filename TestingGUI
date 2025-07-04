@@ -38,7 +38,7 @@ WindUI:Popup({
 task.delay(3, function()
     local Window = WindUI:CreateWindow({
         Title = "Axtro | Testing",
-        Icon = "rbxassetid://129260712070622",
+        Icon = "crown",
         IconThemed = true,
         Author = "Axtro Hub",
         Folder = "CloudHub",
@@ -54,8 +54,8 @@ task.delay(3, function()
 
     -- Create a Tab
     local Tab = Window:Tab({
-        Title = "HOME",
-        Icon = "crown",
+        Title = "Home",
+        Icon = "house",
         Locked = false,
     })
 
@@ -65,29 +65,34 @@ task.delay(3, function()
         TextSize = 17,
     })
 
-       local Section = Tab:Section({
-        Title = "DISCLAIMER: Please join the Discord",
-        TextXAlignment = "",
-        TextSize = 17,
+    -- Create a Tab
+    local Tab = Window:Tab({
+        Title = "Main",
+        Icon = "hammer",
+        Locked = false,
     })
 
-       local Section = Tab:Section({
-        Title = "server to know if the script is Undetected.",
-        TextXAlignment = "",
-        TextSize = 17,
+        -- Create a Tab
+    local Tab = Window:Tab({
+        Title = "Teleport",
+        Icon = "map-pin",
+        Locked = false,
     })
 
-       local Section = Tab:Section({
-        Title = "DISCLAIMER: If anything breaks, reload the script.",
-        TextXAlignment = "",
-        TextSize = 17,
+        -- Create a Tab
+    local Tab = Window:Tab({
+        Title = "Misc",
+        Icon = "crown",
+        Locked = false,
     })
 
-           local Section = Tab:Section({
-        Title = "More improvements coming soon!",
-        TextXAlignment = "",
-        TextSize = 17,
+            -- Create a Tab
+    local Tab = Window:Tab({
+        Title = "Experimental",
+        Icon = "crown",
+        Locked = false,
     })
-    -- Automatically switch to first tab
+
+        -- Automatically switch to first tab
     Window:SelectTab(1)
 end)
