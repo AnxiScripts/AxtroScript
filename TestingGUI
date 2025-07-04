@@ -59,30 +59,10 @@ task.delay(3, function()
         Locked = false,
     })
 
-    local Section = Window:Section({
-    Title = "Section for the tabs",
-    Icon = "crown",
-    Opened = true,
-})
-
-local Paragraph = Tab:Paragraph({
-    Title = "",
-    Desc = [[
-
-        This script was created by the Merqury Hub Managers (Crowned).
-
-        DISCLAIMER: Please join the Discord server to know if the script is Undetected.
-        DISCLAIMER: If anything breaks, reload the script.
-
-        More improvements coming soon!
-
-    ]],
-    Color = "Grey",
-    Image = "",
-    ImageSize = 30,
-    Thumbnail = "",
-    ThumbnailSize = 80,
-    Locked = false
+local Section = Tab:Section({ 
+    Title = "This script was created by the Merqury Hub Managers (Crowned).",
+    TextXAlignment = "Left",
+    TextSize = 17, -- Default Size
 })
     -- Automatically switch to first tab
     Window:SelectTab(1)
