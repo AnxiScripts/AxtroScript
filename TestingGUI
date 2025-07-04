@@ -1,13 +1,4 @@
-local success, WindUILib = pcall(function()
-    return loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
-end)
-
-if not success or not WindUILib then
-    warn("Failed to load WindUI library.")
-    return
-end
-
-local WindUI = WindUILib
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
 WindUI:SetNotificationLower(true)
 
