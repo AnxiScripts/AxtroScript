@@ -15,26 +15,20 @@ WindUI:Popup({
         {
             Title = "No",
             Variant = "Secondary",
-            Callback = function() end,
+            Callback = function()
+                -- do nothing
+            end,
         },
         {
             Title = "Yes",
             Variant = "Primary",
             Callback = function()
-                if setclipboard then
-                    setclipboard(discordLink)
-                    WindUI:Notify({
-                        Title = "Copied!",
-                        Content = "Discord invite link copied to clipboard.",
-                        Duration = 3
-                    })
-                else
-                    WindUI:Notify({
-                        Title = "Clipboard Failed",
-                        Content = "Clipboard not supported in this environment.",
-                        Duration = 3
-                    })
-                end
+                setclipboard(discordLink)
+                WindUI:Notify({
+                    Title = "Copied!",
+                    Content = "Discord invite link copied to clipboard.",
+                    Duration = 3
+                })
             end,
         }
     }
@@ -65,16 +59,35 @@ task.delay(3, function()
         Locked = false,
     })
 
-local Section = Tab:Section({ 
-    Title = "This script was created by Crowned.\n",
-            "DISCLAIMER: Please join the Discord\n"
-            "server to know if the script is Undetected.\n"
-            "DISCLAIMER: If anything breaks, reload\n"
-            "the script.\n"
-            "More improvements coming soon!",
-    TextXAlignment = "Left",
-    TextSize = 17, -- Default Size
-})
+    local Section = Tab:Section({
+        Title = "This script was created by Crowned.",
+        TextXAlignment = "",
+        TextSize = 17,
+    })
+
+       local Section = Tab:Section({
+        Title = "DISCLAIMER: Please join the Discord",
+        TextXAlignment = "",
+        TextSize = 17,
+    })
+
+       local Section = Tab:Section({
+        Title = "server to know if the script is Undetected.",
+        TextXAlignment = "",
+        TextSize = 17,
+    })
+
+       local Section = Tab:Section({
+        Title = "DISCLAIMER: If anything breaks, reload the script.",
+        TextXAlignment = "",
+        TextSize = 17,
+    })
+
+           local Section = Tab:Section({
+        Title = "More improvements coming soon!",
+        TextXAlignment = "",
+        TextSize = 17,
+    })
     -- Automatically switch to first tab
     Window:SelectTab(1)
 end)
