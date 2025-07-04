@@ -60,21 +60,23 @@ task.delay(3, function()
     })
 
 local Paragraph = Tab:Paragraph({
-    Title = "This script was created by the Merqury Hub Managers (Crowned).\n" .. "DISCLAIMER: Please join the Discord server to know if the script is Undetected.\n" .. "DISCLAIMER: If anything breaks, reload the script.\n" .. "More improvements coming soon!",
-    Desc = "",
+    Title = "",
+    Desc = [[
+
+        This script was created by the Merqury Hub Managers (Crowned).
+
+        DISCLAIMER: Please join the Discord server to know if the script is Undetected.
+        DISCLAIMER: If anything breaks, reload the script.
+
+        More improvements coming soon!
+
+    ]],
     Color = "Grey",
     Image = "",
     ImageSize = 30,
     Thumbnail = "",
     ThumbnailSize = 80,
-    Locked = false,
-    Buttons = {
-        {
-            Icon = "crown",
-            Title = "AXTRO",
-            Callback = function() print("1 Button") end,
-        }
-    }
+    Locked = false
 })
     -- Automatically switch to first tab
     Window:SelectTab(1)
