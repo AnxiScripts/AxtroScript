@@ -59,6 +59,12 @@ task.delay(3, function()
         Locked = false,
     })
 
+    local Section = Window:Section({
+    Title = "Section for the tabs",
+    Icon = "crown",
+    Opened = true,
+})
+
 local Paragraph = Tab:Paragraph({
     Title = "",
     Desc = [[
