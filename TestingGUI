@@ -1,5 +1,6 @@
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
+-- Make notifications show lower on screen
 WindUI:SetNotificationLower(true)
 
 function gradient(text, startColor, endColor)
@@ -37,15 +38,15 @@ WindUI:Popup({
             Icon = "arrow-right",
             Variant = "Primary",
             Callback = function()
-                Confirmed = true      
+                Confirmed = true
+            end,
         },
         {
             Title = "Copy DC",
-            Icon = "", -- Optional icon
+            Icon = "", -- Optional: add an icon here
             Variant = "Tertiary",
             Callback = function()
-                -- Clipboard copy (requires executor support like Synapse X)
-                setclipboard("https://discord.gg/FuHV5nFhcZ") -- change this to your URL
+                setclipboard("https://discord.gg/FuHV5nFhcZ") -- replace with your link
                 WindUI:Notify({
                     Title = "Copied!",
                     Content = "Link copied to clipboard.",
@@ -58,8 +59,7 @@ WindUI:Popup({
 
 repeat wait() until Confirmed
 
---
-
+-- Main Window UI
 local Window = WindUI:CreateWindow({
     Title = "Axtro | Testing",
     Icon = "rbxassetid://129260712070622",
@@ -70,8 +70,8 @@ local Window = WindUI:CreateWindow({
     Transparent = true,
     Theme = "Dark",
     User = {
-        Enabled = true, -- <- or false
-        Callback = function() print("clicked") end, -- <- optional
-        Anonymous = true -- <- or true
+        Enabled = true,
+        Callback = function() print("clicked") end,
+        Anonymous = true
     },
 })
