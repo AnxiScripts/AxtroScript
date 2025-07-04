@@ -59,9 +59,27 @@ task.delay(3, function()
     })
 
     homeTab:Section({
-        Title = "This script was created by Crowned.",
-        TextXAlignment = "Center",
-        TextSize = 17,
+    Title = "This script was created by Crowned.",
+    TextXAlignment = "Center",
+    TextSize = 17,
+    })
+
+    homeTab:Section({
+    Title = "DISCLAIMER: Please join the Discord server to know if the script is undetected.",
+    TextXAlignment = "Center",
+    TextSize = 15,
+    })
+
+    homeTab:Section({
+    Title = "If anything breaks, reload the script.",
+    TextXAlignment = "Center",
+    TextSize = 15,
+    })
+
+    homeTab:Section({
+    Title = "More improvements coming soon!",
+    TextXAlignment = "Center",
+    TextSize = 15,
     })
 
     local mainTab = Window:Tab({
