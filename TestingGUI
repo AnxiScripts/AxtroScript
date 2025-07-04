@@ -2,10 +2,8 @@ local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/rel
 
 WindUI:SetNotificationLower(true)
 
--- Optional: Discord link to copy
 local discordLink = "https://discord.gg/FuHV5nFhcZ"
 
--- Show popup asking to join Discord
 WindUI:Popup({
     Title = "Join Our Discord?",
     Icon = "rbxassetid://129260712070622",
@@ -15,9 +13,7 @@ WindUI:Popup({
         {
             Title = "No",
             Variant = "Secondary",
-            Callback = function()
-                -- do nothing
-            end,
+            Callback = function() end,
         },
         {
             Title = "Yes",
@@ -34,14 +30,13 @@ WindUI:Popup({
     }
 })
 
--- Wait 3 seconds before showing the main UI
 task.delay(3, function()
     local Window = WindUI:CreateWindow({
         Title = "Axtro | Testing",
         Icon = "rbxassetid://129260712070622",
         IconThemed = true,
         Author = "Axtro Hub",
-        Folder = "CloudHub",
+        Folder = "AxtroHub",
         Size = UDim2.fromOffset(580, 460),
         Transparent = true,
         Theme = "Dark",
@@ -49,33 +44,30 @@ task.delay(3, function()
             Enabled = true,
             Callback = function() print("User profile clicked") end,
             Anonymous = true
-    },
-})
+        },
+    })
 
--- Create a Tab
-local Tab = Window:Tab({
-    Title = "AXTRO HUB",
-    Icon = "bird",
-    Locked = false,
-})
+    local Tab = Window:Tab({
+        Title = "AXTRO HUB",
+        Icon = "bird", -- Ensure this is a valid icon
+        Locked = false,
+    })
 
-local Paragraph = Tab:Paragraph({
-    Title = "Paragraph with Image, Thumbnail, Buttons",
-    Desc = "Test Paragraph",
-    Color = "Red",
-    Image = "",
-    ImageSize = 30,
-    Thumbnail = "",
-    ThumbnailSize = 80,
-    Locked = false,
-    Buttons = {
-        {
-            Icon = "bird",
-            Title = "Button",
-            Callback = function() print("1 Button") end,
+    local Paragraph = Tab:Paragraph({
+        Title = "Paragraph with Image, Thumbnail, Buttons",
+        Desc = "Test Paragraph",
+        Color = "Red",
+        ImageSize = 30,
+        ThumbnailSize = 80,
+        Locked = false,
+        Buttons = {
+            {
+                Icon = "bird",
+                Title = "Button",
+                Callback = function() print("1 Button") end,
+            }
         }
-    }
-})
+    })
 
--- Optional: Automatically switch to this tab (1 = first tab)
-Window:SelectTab(1)
+    Window:SelectTab(1)
+end)
