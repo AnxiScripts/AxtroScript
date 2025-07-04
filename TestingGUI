@@ -1,14 +1,5 @@
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
--- Test
-
-
-
--- Set theme:
---WindUI:SetTheme("Light")
-
---- EXAMPLE !!!
-
 function gradient(text, startColor, endColor)
     local result = ""
     local length = #text
@@ -32,33 +23,47 @@ WindUI:Popup({
     Title = "Welcome To Axtro!",
     Icon = "rbxassetid://129260712070622",
     IconThemed = true,
-    Content = "This is an Example UI for the " .. gradient("WindUI", Color3.fromHex("#00FF87"), Color3.fromHex("#60EFFF")) .. " Lib",
+    Content = "Welcome To Axtro! To Join Our Discord To Get Notified For Updates And More Please Click Copy DC. " .. gradient("WindUI", Color3.fromHex("#00FF87"), Color3.fromHex("#60EFFF")) .. " Lib",
     Buttons = {
         {
             Title = "Cancel",
-            --Icon = "",
+            Variant = "Secondary",
             Callback = function() end,
-            Variant = "Secondary", -- Primary, Secondary, Tertiary
         },
         {
             Title = "Continue",
             Icon = "arrow-right",
-            Callback = function() Confirmed = true end,
-            Variant = "Primary", -- Primary, Secondary, Tertiary
+            Variant = "Primary",
+            Callback = function()
+                Confirmed = true
+            end,
+        },
+        {
+            Title = "Copy DC",
+            Icon = "", -- Optional icon
+            Variant = "Tertiary",
+            Callback = function()
+                -- Clipboard copy (requires executor support like Synapse X)
+                setclipboard("https://discord.gg/FuHV5nFhcZ") -- change this to your URL
+                WindUI:Notify({
+                    Title = "Copied!",
+                    Content = "Link copied to clipboard.",
+                    Duration = 3
+                })
+            end,
         }
     }
 })
-
 
 repeat wait() until Confirmed
 
 --
 
 local Window = WindUI:CreateWindow({
-    Title = "WindUI Library",
+    Title = "Axtro | Testing",
     Icon = "rbxassetid://129260712070622",
     IconThemed = true,
-    Author = "Example UI",
+    Author = "Axtro Hub",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(580, 460),
     Transparent = true,
