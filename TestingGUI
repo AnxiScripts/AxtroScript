@@ -52,47 +52,41 @@ task.delay(3, function()
         },
     })
 
-    -- Create a Tab
-    local Tab = Window:Tab({
+    local homeTab = Window:Tab({
         Title = "Home",
         Icon = "house",
         Locked = false,
     })
 
-    local Section = Tab:Section({
+    homeTab:Section({
         Title = "This script was created by Crowned.",
-        TextXAlignment = "",
+        TextXAlignment = "Center",
         TextSize = 17,
     })
 
-    -- Create a Tab
-    local Tab = Window:Tab({
+    local mainTab = Window:Tab({
         Title = "Main",
         Icon = "hammer",
         Locked = false,
     })
 
-        -- Create a Tab
-    local Tab = Window:Tab({
+    local teleportTab = Window:Tab({
         Title = "Teleport",
         Icon = "map-pin",
         Locked = false,
     })
 
-        -- Create a Tab
-    local Tab = Window:Tab({
+    local miscTab = Window:Tab({
         Title = "Misc",
         Icon = "crown",
         Locked = false,
     })
 
-            -- Create a Tab
-    local Tab = Window:Tab({
+    local experimentalTab = Window:Tab({
         Title = "Experimental",
         Icon = "crown",
         Locked = false,
     })
 
-        -- Automatically switch to first tab
     Window:SelectTab(1)
 end)
