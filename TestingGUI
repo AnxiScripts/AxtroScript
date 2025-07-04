@@ -1,5 +1,7 @@
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
+WindUI:SetNotificationLower(true)
+
 function gradient(text, startColor, endColor)
     local result = ""
     local length = #text
@@ -23,7 +25,7 @@ WindUI:Popup({
     Title = "Welcome To Axtro!",
     Icon = "rbxassetid://129260712070622",
     IconThemed = true,
-    Content = "Welcome To Axtro! To Join Our Discord To Get Notified For Updates And More Please Click Copy DC. " .. gradient("WindUI", Color3.fromHex("#00FF87"), Color3.fromHex("#60EFFF")) .. " Lib",
+    Content = "Welcome To Axtro! Click Copy DC For Our Discord Link " .. gradient("WindUI", Color3.fromHex("#00FF87"), Color3.fromHex("#60EFFF")) .. " Lib",
     Buttons = {
         {
             Title = "Cancel",
@@ -35,8 +37,7 @@ WindUI:Popup({
             Icon = "arrow-right",
             Variant = "Primary",
             Callback = function()
-                Confirmed = true
-            end,
+                Confirmed = true      
         },
         {
             Title = "Copy DC",
