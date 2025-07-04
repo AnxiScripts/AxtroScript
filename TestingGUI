@@ -22,56 +22,46 @@ end
 
 local Confirmed = false
 
-WindUI:Popup({
-    Title = "Welcome To Axtro!",
-    Icon = "rbxassetid://129260712070622",
-    IconThemed = true,
-    Content = "Welcome To Axtro! Click Copy DC For Our Discord Link " .. gradient("WindUI", Color3.fromHex("#00FF87"), Color3.fromHex("#60EFFF")) .. " Lib",
-    Buttons = {
-        {
-            Title = "Cancel",
-            Variant = "Secondary",
-            Callback = function() end,
-        },
-        {
-            Title = "Continue",
-            Icon = "arrow-right",
-            Variant = "Primary",
-            Callback = function()
-                Confirmed = true
-            end,
-        },
-        {
-            Title = "Copy DC",
-            Icon = "", -- Optional: add an icon here
-            Variant = "Tertiary",
-            Callback = function()
-                setclipboard("https://discord.gg/FuHV5nFhcZ") -- replace with your link
-                WindUI:Notify({
-                    Title = "Copied!",
-                    Content = "Link copied to clipboard.",
-                    Duration = 3
-                })
-            end,
+local function showPopup()
+    WindUI:Popup({
+        Title = "Welcome To Axtro!",
+        Icon = "rbxassetid://129260712070622",
+        IconThemed = true,
+        Content = "Welcome To Axtro! Click Copy DC For Our Discord Link " .. gradient("WindUI", Color3.fromHex("#00FF87"), Color3.fromHex("#60EFFF")) .. " Lib",
+        Buttons = {
+            {
+                Title = "Cancel",
+                Variant = "Secondary",
+                Callback = function() end,
+            },
+            {
+                Title = "Continue",
+                Icon = "arrow-right",
+                Variant = "Primary",
+                Callback = function()
+                    Confirmed = true
+                end,
+            },
+            {
+                Title = "Copy DC",
+                Icon = "",
+                Variant = "Tertiary",
+                Callback = function()
+                    setclipboard("https://discord.gg/FuHV5nFhcZ")
+                    WindUI:Notify({
+                        Title = "Copied!",
+                        Content = "Link copied to clipboard.",
+                        Duration = 3
+                    })
+
+                    -- Re-show the popup after copying
+                    showPopup()
+                end,
+            }
         }
-    }
-})
+    })
+end
 
-repeat wait() until Confirmed
+-- Call the popup function
+showPopup()
 
--- Main Window UI
-local Window = WindUI:CreateWindow({
-    Title = "Axtro | Testing",
-    Icon = "rbxassetid://129260712070622",
-    IconThemed = true,
-    Author = "Axtro Hub",
-    Folder = "CloudHub",
-    Size = UDim2.fromOffset(580, 460),
-    Transparent = true,
-    Theme = "Dark",
-    User = {
-        Enabled = true,
-        Callback = function() print("clicked") end,
-        Anonymous = true
-    },
-})
