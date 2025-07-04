@@ -49,29 +49,31 @@ task.delay(3, function()
             Enabled = true,
             Callback = function() print("User profile clicked") end,
             Anonymous = true
-    },
-})
+        },
+    })
 
--- Create a Tab
-local Tab = Window:Tab({
-    Title = "HOME",
-    Icon = "bird",
-    Locked = false,
-})
+    -- Create a Tab
+    local Tab = Window:Tab({
+        Title = "HOME",
+        Icon = "bird",
+        Locked = false,
+    })
 
-local Paragraph = Tab:Paragraph({
-    Title = "READ",
-    Desc = "This script was created by the Merqury Hub Managers (Crowned).\n" ..
-           "DISCLAIMER: Please join the Discord server to know if the script is Undetected.\n" ..
-           "DISCLAIMER: If anything breaks, reload the script.\n" ..
-           "More improvements coming soon!",
-    Color = "Black",
-    Image = "",
-    ImageSize = 30,
-    Thumbnail = "",
-    ThumbnailSize = 80,
-    Locked = false,
-})
+    -- Add a paragraph to the tab
+    local Paragraph = Tab:Paragraph({
+        Title = "READ",
+        Desc = "This script was created by the Merqury Hub Managers (Crowned).\n" ..
+               "DISCLAIMER: Please join the Discord server to know if the script is Undetected.\n" ..
+               "DISCLAIMER: If anything breaks, reload the script.\n" ..
+               "More improvements coming soon!",
+        Color = "Black",
+        Image = "",
+        ImageSize = 30,
+        Thumbnail = "",
+        ThumbnailSize = 80,
+        Locked = false,
+    })
 
--- Optional: Automatically switch to this tab (1 = first tab)
-Window:SelectTab(1)
+    -- Automatically switch to first tab
+    Window:SelectTab(1)
+end)
