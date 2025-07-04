@@ -1,4 +1,13 @@
-local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+local success, WindUILib = pcall(function()
+    return loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+end)
+
+if not success or not WindUILib then
+    warn("Failed to load WindUI library.")
+    return
+end
+
+local WindUI = WindUILib
 
 WindUI:SetNotificationLower(true)
 
@@ -15,20 +24,26 @@ WindUI:Popup({
         {
             Title = "No",
             Variant = "Secondary",
-            Callback = function()
-                -- do nothing
-            end,
+            Callback = function() end,
         },
         {
             Title = "Yes",
             Variant = "Primary",
             Callback = function()
-                setclipboard(discordLink)
-                WindUI:Notify({
-                    Title = "Copied!",
-                    Content = "Discord invite link copied to clipboard.",
-                    Duration = 3
-                })
+                if setclipboard then
+                    setclipboard(discordLink)
+                    WindUI:Notify({
+                        Title = "Copied!",
+                        Content = "Discord invite link copied to clipboard.",
+                        Duration = 3
+                    })
+                else
+                    WindUI:Notify({
+                        Title = "Clipboard Failed",
+                        Content = "Clipboard not supported in this environment.",
+                        Duration = 3
+                    })
+                end
             end,
         }
     }
@@ -59,16 +74,20 @@ task.delay(3, function()
         Locked = false,
     })
 
-local Section = Tab:Section({ 
-    Title = "This script was created by Crowned.\n",
-            "DISCLAIMER: Please join the Discord\n"
-            "server to know if the script is Undetected.\n"
-            "DISCLAIMER: If anything breaks, reload\n"
-            "the script.\n"
-            "More improvements coming soon!",
-    TextXAlignment = "Left",
-    TextSize = 17, -- Default Size
-})
+    local Section = Tab:Section({
+        Title = "SCRIPT INFORMATION",
+        Content = [[
+This script was created by Crowned.
+DISCLAIMER: Please join the Discord
+server to know if the script is Undetected.
+DISCLAIMER: If anything breaks, reload
+the script.
+More improvements coming soon!
+        ]],
+        TextXAlignment = "Left",
+        TextSize = 17,
+    })
+
     -- Automatically switch to first tab
     Window:SelectTab(1)
 end)
