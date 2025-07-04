@@ -19,34 +19,66 @@ end
 
 local Confirmed = false
 
+local function showPopup()
+    WindUI:Popup({
+        Title = "Welcome To Axtro!",
+        Icon = "rbxassetid://129260712070622",
+        IconThemed = true,
+        Content = "Welcome To Axtro! Click Copy DC For Our Discord Link " .. gradient("WindUI", Color3.fromHex("#00FF87"), Color3.fromHex("#60EFFF")) .. " Lib",
+        Buttons = {
+            {
+                Title = "Cancel",
+                Variant = "Secondary",
+                Callback = function() end,
+            },
+            {
+                Title = "Continue",
+                Icon = "arrow-right",
+                Variant = "Primary",
+                Callback = function()
+                    Confirmed = true
+                end,
+            },
+            {
+                Title = "Copy DC",
+                Icon = "",
+                Variant = "Tertiary",
+                Callback = function()
+                    setclipboard("https://discord.gg/FuHV5nFhcZ")
+                    WindUI:Notify({
+                        Title = "Copied!",
+                        Content = "Link copied to clipboard.",
+                        Duration = 3
+                    })
+-- Optional: Discord link to copy
+local discordLink = "https://discord.gg/FuHV5nFhcZ"
+
+                    -- Re-show the popup after copying
+                    showPopup()
+                end,
+            }
+-- Show popup asking to join Discord
 WindUI:Popup({
-    Title = "Welcome To Axtro!",
+    Title = "Join Our Discord?",
     Icon = "rbxassetid://129260712070622",
     IconThemed = true,
-    Content = "Welcome To Axtro! Click Copy DC For Our Discord Link " .. gradient("WindUI", Color3.fromHex("#00FF87"), Color3.fromHex("#60EFFF")) .. " Lib",
+    Content = "Would you like to join our Discord server for updates?",
     Buttons = {
         {
-            Title = "Cancel",
+            Title = "No",
             Variant = "Secondary",
-            Callback = function() end,
-        },
-        {
-            Title = "Continue",
-            Icon = "arrow-right",
-            Variant = "Primary",
             Callback = function()
-                Confirmed = true
+                -- do nothing
             end,
         },
         {
-            Title = "Copy DC",
-            Icon = "",
-            Variant = "Tertiary",
+            Title = "Yes",
+            Variant = "Primary",
             Callback = function()
-                setclipboard("https://discord.gg/FuHV5nFhcZ")
+                setclipboard(discordLink)
                 WindUI:Notify({
                     Title = "Copied!",
-                    Content = "Link copied to clipboard.",
+                    Content = "Discord invite link copied to clipboard.",
                     Duration = 3
                 })
             end,
@@ -54,38 +86,25 @@ WindUI:Popup({
     }
 })
 
-repeat wait() until Confirmed
+-- Wait 3 seconds before showing the main UI
+task.delay(3, function()
+    local Window = WindUI:CreateWindow({
+        Title = "Axtro | Testing",
+        Icon = "rbxassetid://129260712070622",
+        IconThemed = true,
+        Author = "Axtro Hub",
+        Folder = "CloudHub",
+        Size = UDim2.fromOffset(580, 460),
+        Transparent = true,
+        Theme = "Dark",
+        User = {
+            Enabled = true,
+            Callback = function() print("User profile clicked") end,
+            Anonymous = true
+        },
+    })
+end
+end)
 
--- Create the main window
-local Window = WindUI:CreateWindow({
-    Title = "Axtro | Testing",
-    Icon = "rbxassetid://129260712070622",
-    IconThemed = true,
-    Author = "Axtro Hub",
-    Folder = "CloudHub",
-    Size = UDim2.fromOffset(580, 460),
-    Transparent = true,
-    Theme = "Dark",
-    User = {
-        Enabled = true,
-        Callback = function() print("User profile clicked") end,
-        Anonymous = true
-    },
-})
-
--- Create a Tab
-local Tab = Window:Tab({
-    Title = "Main Tab",
-    Icon = "bird",
-    Locked = false,
-})
-
--- Create a Section inside the Tab
-local Section = Tab:Section({
-    Title = "Section for the tabs",
-    Icon = "bird",
-    Opened = true,
-})
-
--- Optional: Automatically switch to this tab (1 = first tab)
-Window:SelectTab(1)
+-- Call the popup function
+showPopup()
