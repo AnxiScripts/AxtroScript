@@ -96,13 +96,13 @@ task.delay(2, function()
 
     local miscTab = Window:Tab({
         Title = "Misc",
-        Icon = "crown",
+        Icon = "bolt",
         Locked = false,
     })
 
     local experimentalTab = Window:Tab({
         Title = "Experimental",
-        Icon = "crown",
+        Icon = "biohazard",
         Locked = false,
     })
 
